@@ -1,3 +1,3 @@
-# ShopApp
+# MercanShop
 
-Shop App on Flutter
+Mercan Shop App on Flutter
