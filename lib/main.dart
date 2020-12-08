@@ -1,3 +1,6 @@
+import 'package:ShopApp/screens/shopping_cart.dart';
+
+import './providers/cart.dart';
 import './providers/products.dart';
 import './screens/product_detail.dart';
 import './screens/products_overview.dart';
@@ -11,14 +14,19 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (BuildContext context) => Products(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (ctx) => Products()),
+        ChangeNotifierProvider(create: (ctx) => Cart()),
+      ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         theme: buildTheme(),
         title: "MERCAN Shop",
         home: ProductsOverview(),
         routes: {
           ProductDetail.routeName: (context) => ProductDetail(),
+          ShoppingCart.routeName: (context) => ShoppingCart(),
         },
       ),
     );
