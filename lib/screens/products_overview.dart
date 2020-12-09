@@ -1,3 +1,5 @@
+import 'package:ShopApp/widgets/app_drawer.dart';
+
 import '../screens/shopping_cart.dart';
 import '../providers/cart.dart';
 import '../widgets/badge.dart';
@@ -23,6 +25,7 @@ class _ProductsOverviewState extends State<ProductsOverview> {
     return Scaffold(
       appBar: buildAppBar(),
       body: ProductsGrid(_showOnlyFavorites),
+      drawer: AppDrawer(),
     );
   }
 
