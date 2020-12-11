@@ -108,21 +108,16 @@ class _EditProductState extends State<EditProduct> {
             ],
           ),
         );
-      } finally {
-        setState(() {
-          _isLoading = true;
-        });
-        Navigator.of(context).pop();
       }
     } else {
-      Provider.of<Products>(context, listen: false).updateProduct(_editedProduct);
-
-      setState(() {
-        _isLoading = true;
-      });
-
-      Navigator.of(context).pop();
+      await Provider.of<Products>(context, listen: false).updateProduct(_editedProduct);
     }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    Navigator.of(context).pop();
   }
 
   @override

@@ -1,3 +1,5 @@
+import 'package:ShopApp/providers/auth.dart';
+import 'package:ShopApp/screens/auth_screen.dart';
 import 'package:ShopApp/screens/edit_product.dart';
 import 'package:ShopApp/screens/orders_list.dart';
 import 'package:ShopApp/screens/user_products.dart';
@@ -20,6 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (ctx) => Auth()),
         ChangeNotifierProvider(create: (ctx) => Products()),
         ChangeNotifierProvider(create: (ctx) => Cart()),
         ChangeNotifierProvider(create: (ctx) => Orders()),
@@ -28,7 +31,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: buildTheme(),
         title: "MERCAN Shop",
-        home: ProductsOverview(),
+        home: AuthScreen(),
         routes: {
           ProductDetail.routeName: (context) => ProductDetail(),
           ShoppingCart.routeName: (context) => ShoppingCart(),
