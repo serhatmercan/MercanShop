@@ -16,32 +16,38 @@ class Badge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       alignment: Alignment.center,
-      children: [
-        child,
-        Positioned(
-          right: 8,
-          top: 8,
-          child: Container(
-            padding: EdgeInsets.all(2.0),
-            // color: Theme.of(context).accentColor,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-              color: color != null ? color : Theme.of(context).accentColor,
-            ),
-            constraints: BoxConstraints(
-              minWidth: 16,
-              minHeight: 16,
-            ),
-            child: Text(
-              value,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 10,
-              ),
-            ),
-          ),
-        )
-      ],
+      children: [child, buildPositioned(context)],
+    );
+  }
+
+  Positioned buildPositioned(BuildContext context) {
+    return Positioned(
+      right: 8,
+      top: 8,
+      child: buildContainer(context),
+    );
+  }
+
+  Container buildContainer(BuildContext context) {
+    return Container(
+      constraints: BoxConstraints(
+        minWidth: 16,
+        minHeight: 16,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        color: color != null ? color : Theme.of(context).accentColor,
+      ),
+      padding: EdgeInsets.all(2.0),
+      child: buildText(),
+    );
+  }
+
+  Text buildText() {
+    return Text(
+      value,
+      textAlign: TextAlign.center,
+      style: TextStyle(fontSize: 10),
     );
   }
 }

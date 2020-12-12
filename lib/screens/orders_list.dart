@@ -28,26 +28,30 @@ class _OrdersListState extends State<OrdersList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Orders")),
-      body: FutureBuilder(
-        future: _ordersFuture,
-        builder: (ctx, data) {
-          if (data.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          } else {
-            if (data.error == null) {
-              return Consumer<Orders>(
-                builder: (ctx, orderData, child) => ListView.builder(
-                  itemCount: orderData.orders.length,
-                  itemBuilder: (ctx, i) => OrderItem(orderData.orders[i]),
-                ),
-              );
-            } else {
-              return Center(child: Text("An Error Occured!"));
-            }
-          }
-        },
-      ),
+      body: bodyFutureBuilder(),
       drawer: AppDrawer(),
+    );
+  }
+
+  FutureBuilder bodyFutureBuilder() {
+    return FutureBuilder(
+      future: _ordersFuture,
+      builder: (ctx, data) {
+        if (data.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else {
+          if (data.error == null) {
+            return Consumer<Orders>(
+              builder: (ctx, orderData, child) => ListView.builder(
+                itemCount: orderData.orders.length,
+                itemBuilder: (ctx, i) => OrderItem(orderData.orders[i]),
+              ),
+            );
+          } else {
+            return Center(child: Text("An Error Occured!"));
+          }
+        }
+      },
     );
   }
 }

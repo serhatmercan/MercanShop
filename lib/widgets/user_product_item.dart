@@ -16,39 +16,49 @@ class UserProductItem extends StatelessWidget {
 
     return ListTile(
       title: Text(title),
-      leading: CircleAvatar(
-        backgroundImage: NetworkImage(imageUrl),
+      leading: CircleAvatar(backgroundImage: NetworkImage(imageUrl)),
+      trailing: buildContainer(context, scaffoldContext),
+    );
+  }
+
+  Container buildContainer(BuildContext context, ScaffoldState scaffoldContext) {
+    return Container(
+      width: 100,
+      child: Row(
+        children: [
+          buildEditIconButton(context),
+          buildDeleteIconButton(context, scaffoldContext),
+        ],
       ),
-      trailing: Container(
-        child: Row(
-          children: [
-            IconButton(
-              color: Theme.of(context).primaryColor,
-              icon: Icon(Icons.edit),
-              onPressed: () => Navigator.of(context).pushNamed(EditProduct.routeName, arguments: id),
+    );
+  }
+
+  IconButton buildEditIconButton(BuildContext context) {
+    return IconButton(
+      color: Theme.of(context).primaryColor,
+      icon: Icon(Icons.edit),
+      onPressed: () => Navigator.of(context).pushNamed(EditProduct.routeName, arguments: id),
+    );
+  }
+
+  IconButton buildDeleteIconButton(BuildContext context, ScaffoldState scaffoldContext) {
+    return IconButton(
+      color: Theme.of(context).errorColor,
+      icon: Icon(Icons.delete),
+      onPressed: () async {
+        try {
+          Provider.of<Products>(context, listen: false).deleteProduct(id);
+        } catch (e) {
+          scaffoldContext.showSnackBar(
+            SnackBar(
+              content: Text(
+                "Deleteing faild!",
+                textAlign: TextAlign.center,
+              ),
             ),
-            IconButton(
-              color: Theme.of(context).errorColor,
-              icon: Icon(Icons.delete),
-              onPressed: () async {
-                try {
-                  Provider.of<Products>(context, listen: false).deleteProduct(id);
-                } catch (e) {
-                  scaffoldContext.showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        "Deleteing failde",
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  );
-                }
-              },
-            ),
-          ],
-        ),
-        width: 100,
-      ),
+          );
+        }
+      },
     );
   }
 }

@@ -14,43 +14,51 @@ class ShoppingCart extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text("Shopping List")),
       body: Column(
-        children: [
-          Card(
-            margin: EdgeInsets.all(15),
-            child: Padding(
-              padding: EdgeInsets.all(8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Total", style: TextStyle(fontSize: 20)),
-                  SizedBox(width: 10),
-                  Spacer(),
-                  Chip(
-                    backgroundColor: Theme.of(context).primaryColor,
-                    label: Text(
-                      "\$${cart.totalAmount.toStringAsFixed(2)}",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                  OrderButton(cart: cart),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(height: 10),
-          Expanded(
-            child: ListView.builder(
-              itemCount: cart.items.length,
-              itemBuilder: (ctx, i) => CartItem(
-                cart.items.values.toList()[i].id,
-                cart.items.keys.toList()[i],
-                cart.items.values.toList()[i].price,
-                cart.items.values.toList()[i].quantity,
-                cart.items.values.toList()[i].title,
-              ),
-            ),
-          )
-        ],
+        children: [buildCard(context, cart), SizedBox(height: 10), buildExpanded(cart)],
+      ),
+    );
+  }
+
+  Card buildCard(BuildContext context, Cart cart) {
+    return Card(
+      margin: EdgeInsets.all(15),
+      child: Padding(
+        padding: EdgeInsets.all(8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text("Total", style: TextStyle(fontSize: 20)),
+            SizedBox(width: 10),
+            Spacer(),
+            buildChip(context, cart),
+            OrderButton(cart: cart),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Chip buildChip(BuildContext context, Cart cart) {
+    return Chip(
+      backgroundColor: Theme.of(context).primaryColor,
+      label: Text(
+        "\$${cart.totalAmount.toStringAsFixed(2)}",
+        style: TextStyle(color: Colors.white),
+      ),
+    );
+  }
+
+  Expanded buildExpanded(Cart cart) {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: cart.items.length,
+        itemBuilder: (ctx, i) => CartItem(
+          cart.items.values.toList()[i].id,
+          cart.items.keys.toList()[i],
+          cart.items.values.toList()[i].price,
+          cart.items.values.toList()[i].quantity,
+          cart.items.values.toList()[i].title,
+        ),
       ),
     );
   }

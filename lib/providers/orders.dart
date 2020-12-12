@@ -94,6 +94,7 @@ class Orders with ChangeNotifier {
       );
 
       _orders.add(order);
+
       notifyListeners();
     } catch (e) {
       throw e;

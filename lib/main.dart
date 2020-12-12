@@ -1,8 +1,10 @@
+import 'package:ShopApp/helpers/custom_route.dart';
 import 'package:ShopApp/providers/auth.dart';
 import 'package:ShopApp/screens/auth_screen.dart';
 import 'package:ShopApp/screens/edit_product.dart';
 import 'package:ShopApp/screens/orders_list.dart';
 import 'package:ShopApp/screens/products_overview.dart';
+import 'package:ShopApp/screens/splash.dart';
 import 'package:ShopApp/screens/user_products.dart';
 
 import './providers/orders.dart';
@@ -39,7 +41,13 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: buildTheme(),
           title: "MERCAN Shop",
-          home: auth.isAuth ? ProductsOverview() : AuthScreen(),
+          home: auth.isAuth
+              ? ProductsOverview()
+              : FutureBuilder(
+                  builder: (ctx, authResultSnapshot) =>
+                      authResultSnapshot.connectionState == ConnectionState.waiting ? Splash() : AuthScreen(),
+                  future: auth.tryAutoLogin(),
+                ),
           routes: {
             ProductDetail.routeName: (context) => ProductDetail(),
             ShoppingCart.routeName: (context) => ShoppingCart(),
@@ -56,6 +64,12 @@ class MyApp extends StatelessWidget {
     return ThemeData(
       accentColor: Colors.red,
       fontFamily: "Lato",
+      pageTransitionsTheme: PageTransitionsTheme(
+        builders: {
+          TargetPlatform.android: CustomPageTransitionBuilder(),
+          TargetPlatform.iOS: CustomPageTransitionBuilder(),
+        },
+      ),
       primarySwatch: Colors.blue,
     );
   }

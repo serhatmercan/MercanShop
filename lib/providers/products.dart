@@ -37,6 +37,7 @@ class Products with ChangeNotifier {
 
       url =
           "https://shopapp-8e219-default-rtdb.europe-west1.firebasedatabase.app/favorites/$userId.json?auth=$authToken";
+
       final favoritesResponse = await http.get(url);
       final favoritesData = json.decode(favoritesResponse.body);
 
@@ -86,6 +87,7 @@ class Products with ChangeNotifier {
       );
 
       _items.add(newProduct);
+
       notifyListeners();
     } catch (e) {
       throw e;
@@ -107,6 +109,7 @@ class Products with ChangeNotifier {
           }));
 
       _items[productIndex] = product;
+
       notifyListeners();
     }
   }
@@ -118,6 +121,7 @@ class Products with ChangeNotifier {
     var product = _items[index];
 
     _items.removeAt(index);
+
     notifyListeners();
 
     final response = await http.delete(url);

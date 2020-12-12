@@ -51,36 +51,44 @@ class _ProductsOverviewState extends State<ProductsOverview> {
   AppBar buildAppBar() {
     return AppBar(
       actions: [
-        PopupMenuButton(
-          icon: Icon(Icons.more_vert),
-          itemBuilder: (_) => [
-            PopupMenuItem(
-              child: Text("Only Favorites"),
-              value: FilterOptions.Favorites,
-            ),
-            PopupMenuItem(
-              child: Text("Show All"),
-              value: FilterOptions.All,
-            ),
-          ],
-          onSelected: (FilterOptions selectedValue) {
-            setState(() {
-              _showOnlyFavorites = selectedValue == FilterOptions.Favorites;
-            });
-          },
-        ),
-        Consumer<Cart>(
-          builder: (_, cart, child) => Badge(
-            child: child,
-            value: cart.itemCount.toString(),
-          ),
-          child: IconButton(
-            icon: Icon(Icons.shopping_cart),
-            onPressed: () => Navigator.of(context).pushNamed(ShoppingCart.routeName),
-          ),
-        ),
+        buildPopupMenuButton(),
+        buildConsumer(),
       ],
       title: Text("MERCAN Shop"),
+    );
+  }
+
+  PopupMenuButton<FilterOptions> buildPopupMenuButton() {
+    return PopupMenuButton(
+      icon: Icon(Icons.more_vert),
+      itemBuilder: (_) => [
+        PopupMenuItem(
+          child: Text("Only Favorites"),
+          value: FilterOptions.Favorites,
+        ),
+        PopupMenuItem(
+          child: Text("Show All"),
+          value: FilterOptions.All,
+        ),
+      ],
+      onSelected: (FilterOptions selectedValue) {
+        setState(() {
+          _showOnlyFavorites = selectedValue == FilterOptions.Favorites;
+        });
+      },
+    );
+  }
+
+  Consumer<Cart> buildConsumer() {
+    return Consumer<Cart>(
+      builder: (_, cart, child) => Badge(
+        child: child,
+        value: cart.itemCount.toString(),
+      ),
+      child: IconButton(
+        icon: Icon(Icons.shopping_cart),
+        onPressed: () => Navigator.of(context).pushNamed(ShoppingCart.routeName),
+      ),
     );
   }
 }

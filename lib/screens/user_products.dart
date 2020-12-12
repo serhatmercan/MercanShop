@@ -17,42 +17,56 @@ class UserProducts extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () => Navigator.of(context).pushNamed(EditProduct.routeName),
-          ),
+          buildIconButton(context),
         ],
         title: const Text("Products"),
       ),
-      body: FutureBuilder(
-        future: _refreshProducts(context),
-        builder: (ctx, snapshot) => snapshot.connectionState == ConnectionState.waiting
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : RefreshIndicator(
-                onRefresh: () => _refreshProducts(context),
-                child: Consumer<Products>(
-                  builder: (ctx, productsData, _) => Padding(
-                    child: ListView.builder(
-                      itemBuilder: (_, i) => Column(
-                        children: [
-                          UserProductItem(
-                            productsData.items[i].id,
-                            productsData.items[i].title,
-                            productsData.items[i].imageUrl,
-                          ),
-                          Divider(),
-                        ],
-                      ),
-                      itemCount: productsData.items.length,
-                    ),
-                    padding: EdgeInsets.all(8),
-                  ),
-                ),
-              ),
-      ),
+      body: buildFutureBuilder(context),
       drawer: AppDrawer(),
+    );
+  }
+
+  IconButton buildIconButton(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.add),
+      onPressed: () => Navigator.of(context).pushNamed(EditProduct.routeName),
+    );
+  }
+
+  FutureBuilder<void> buildFutureBuilder(BuildContext context) {
+    return FutureBuilder(
+      future: _refreshProducts(context),
+      builder: (ctx, snapshot) => snapshot.connectionState == ConnectionState.waiting
+          ? Center(child: CircularProgressIndicator())
+          : buildRefreshIndicator(context),
+    );
+  }
+
+  RefreshIndicator buildRefreshIndicator(BuildContext context) {
+    return RefreshIndicator(
+      onRefresh: () => _refreshProducts(context),
+      child: Consumer<Products>(
+        builder: (ctx, productsData, _) => Padding(
+          child: buildListView(productsData),
+          padding: EdgeInsets.all(8),
+        ),
+      ),
+    );
+  }
+
+  ListView buildListView(Products productsData) {
+    return ListView.builder(
+      itemBuilder: (_, i) => Column(
+        children: [
+          UserProductItem(
+            productsData.items[i].id,
+            productsData.items[i].title,
+            productsData.items[i].imageUrl,
+          ),
+          Divider(),
+        ],
+      ),
+      itemCount: productsData.items.length,
     );
   }
 }

@@ -15,55 +15,77 @@ class CartItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dismissible(
       key: ValueKey(id),
-      background: Container(
-        alignment: Alignment.centerRight,
-        color: Theme.of(context).errorColor,
-        margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-        padding: EdgeInsets.only(right: 20),
-        child: Icon(
-          Icons.delete,
-          color: Colors.white,
-          size: 40,
-        ),
-      ),
-      confirmDismiss: (direction) {
-        return showDialog(
-          builder: (ctx) => AlertDialog(
-            actions: [
-              FlatButton(
-                child: Text("Yes"),
-                onPressed: () => Navigator.of(ctx).pop(true),
-              ),
-              FlatButton(
-                child: Text("No"),
-                onPressed: () => Navigator.of(ctx).pop(false),
-              ),
-            ],
-            content: Text("Do you want to delete the item from the cart ?"),
-            title: Text("Info"),
-          ),
-          context: context,
-        );
-      },
+      background: buildContainer(context),
+      confirmDismiss: (direction) => buildShowDialog(context),
       direction: DismissDirection.endToStart,
       onDismissed: (direction) => Provider.of<Cart>(context, listen: false).deleteItem(productId),
-      child: Card(
-        margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-        child: Padding(
-          padding: EdgeInsets.all(8),
-          child: ListTile(
-            leading: CircleAvatar(
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: FittedBox(
-                  child: Text("\$$price"),
-                ),
-              ),
-            ),
-            subtitle: Text("Total: \$${(price * quantity)}"),
-            title: Text(title),
-            trailing: Text("$quantity x"),
+      child: buildCard(),
+    );
+  }
+
+  Container buildContainer(BuildContext context) {
+    return Container(
+      alignment: Alignment.centerRight,
+      color: Theme.of(context).errorColor,
+      margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+      padding: EdgeInsets.only(right: 20),
+      child: buildIcon(),
+    );
+  }
+
+  Icon buildIcon() {
+    return Icon(
+      Icons.delete,
+      color: Colors.white,
+      size: 40,
+    );
+  }
+
+  Future<bool> buildShowDialog(BuildContext context) {
+    return showDialog(
+      builder: (ctx) => AlertDialog(
+        actions: [
+          FlatButton(
+            child: Text("Yes"),
+            onPressed: () => Navigator.of(ctx).pop(true),
           ),
+          FlatButton(
+            child: Text("No"),
+            onPressed: () => Navigator.of(ctx).pop(false),
+          ),
+        ],
+        content: Text("Do you want to delete the item from the cart ?"),
+        title: Text("Info"),
+      ),
+      context: context,
+    );
+  }
+
+  Card buildCard() {
+    return Card(
+      margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+      child: Padding(
+        padding: EdgeInsets.all(8),
+        child: buildListTile(),
+      ),
+    );
+  }
+
+  ListTile buildListTile() {
+    return ListTile(
+      leading: buildCircleAvatar(),
+      subtitle: Text("Total: \$${(price * quantity)}"),
+      title: Text(title),
+      trailing: Text("$quantity x"),
+    );
+  }
+
+  CircleAvatar buildCircleAvatar() {
+    return CircleAvatar(
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: FittedBox(
+          child: Text("\$$price"),
         ),
       ),
     );
