@@ -2,13 +2,13 @@ import 'package:ShopApp/providers/auth.dart';
 import 'package:ShopApp/screens/auth_screen.dart';
 import 'package:ShopApp/screens/edit_product.dart';
 import 'package:ShopApp/screens/orders_list.dart';
+import 'package:ShopApp/screens/products_overview.dart';
 import 'package:ShopApp/screens/user_products.dart';
 
 import './providers/orders.dart';
 import './providers/cart.dart';
 import './providers/products.dart';
 import './screens/product_detail.dart';
-import './screens/products_overview.dart';
 import './screens/shopping_cart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -23,22 +23,31 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (ctx) => Auth()),
-        ChangeNotifierProvider(create: (ctx) => Products()),
+        ChangeNotifierProxyProvider<Auth, Products>(
+          create: null,
+          update: (_, auth, prevProducts) =>
+              Products(auth.token, auth.userId, prevProducts == null ? [] : prevProducts.items),
+        ),
         ChangeNotifierProvider(create: (ctx) => Cart()),
-        ChangeNotifierProvider(create: (ctx) => Orders()),
+        ChangeNotifierProxyProvider<Auth, Orders>(
+          create: null,
+          update: (_, auth, prevOrders) => Orders(auth.token, auth.userId, prevOrders == null ? [] : prevOrders.orders),
+        ),
       ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: buildTheme(),
-        title: "MERCAN Shop",
-        home: AuthScreen(),
-        routes: {
-          ProductDetail.routeName: (context) => ProductDetail(),
-          ShoppingCart.routeName: (context) => ShoppingCart(),
-          OrdersList.routeName: (context) => OrdersList(),
-          UserProducts.routeName: (context) => UserProducts(),
-          EditProduct.routeName: (context) => EditProduct(),
-        },
+      child: Consumer<Auth>(
+        builder: (ctx, auth, _) => MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: buildTheme(),
+          title: "MERCAN Shop",
+          home: auth.isAuth ? ProductsOverview() : AuthScreen(),
+          routes: {
+            ProductDetail.routeName: (context) => ProductDetail(),
+            ShoppingCart.routeName: (context) => ShoppingCart(),
+            OrdersList.routeName: (context) => OrdersList(),
+            UserProducts.routeName: (context) => UserProducts(),
+            EditProduct.routeName: (context) => EditProduct(),
+          },
+        ),
       ),
     );
   }
